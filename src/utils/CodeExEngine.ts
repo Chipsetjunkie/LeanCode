@@ -16,9 +16,10 @@ type OperationResultType = {
 export interface CodeExecutionReturnType {
   operationResults: OperationResultType[];
   status: boolean;
+  runTime: number;
 }
 
-interface ErrorType {
+export interface ErrorType {
   error: boolean;
   message: any;
 }
@@ -37,26 +38,26 @@ export default class CodeExecutionEngine implements CodeExecution {
   }
 
   execute(codeSnippet: string, isTest = false) {
-    const testcasesResults: TestCaseResultsObjectType[] = []
-    const logs: string[] = []
+    const testcasesResults: TestCaseResultsObjectType[] = [];
+    const logs: string[] = [];
     let testPassedStatus = true;
 
-
     const windowLog = console.log;
+    const windowError = console.error;
+    console.error = function(){}
     console.log = function (...args) {
       // windowLog(...args);
       logs.push(`${[...args]}`);
     };
 
-
+    const startTime = performance.now();
     try {
       for (let i = 0; i < (isTest ? 2 : this.input.length); i++) {
-        
         const input = this.input[i].inputs;
         const answer = this.input[i].answers;
         const handlerFunction = new Function(
-          `input`,
-          `function run(){ ${codeSnippet} return ${this.functionName}()} return run()`
+          "input",
+          `function run(){ ${codeSnippet} return ${this.functionName}(input)} return run()`
         );
         const result = handlerFunction(input);
         const status = result === answer;
@@ -75,19 +76,22 @@ export default class CodeExecutionEngine implements CodeExecution {
       };
     }
 
+    console.log = windowLog;
+    const endTime = performance.now() - startTime;
     const operationResults: OperationResultType[] = [];
+    
     for (let i = 0; i < (isTest ? 2 : this.input.length); i++) {
       operationResults.push({
-        logs: logs[i]|| "",
+        logs: logs[i] || "",
         testCaseResults: testcasesResults[i],
         input: this.input[i],
       });
     }
 
-    console.log = windowLog;
     return {
       operationResults,
       status: testPassedStatus,
+      runTime: endTime,
     };
   }
 }
