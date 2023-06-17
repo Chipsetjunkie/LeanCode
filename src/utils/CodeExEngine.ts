@@ -1,5 +1,5 @@
 //TODO: move computation to worker thread
-
+//TODO: clean up logic
 
 type TestCaseResultsObjectType = {
   expected: string;
@@ -7,9 +7,14 @@ type TestCaseResultsObjectType = {
   status: boolean;
 };
 
-interface CodeExecutionReturnType {
-  logs: string[];
-  testcasesResults: TestCaseResultsObjectType[];
+type OperationResultType = {
+  logs: string;
+  testCaseResults: TestCaseResultsObjectType;
+  input: any
+};
+
+export interface CodeExecutionReturnType {
+  operationResults: OperationResultType[];
   status: boolean;
 }
 
@@ -34,8 +39,10 @@ export default class CodeExecutionEngine implements CodeExecution {
   }
 
   execute(codeSnippet: string) {
-    const testcasesResults = Array(this.input.length);
-    const logs = Array(this.input.length).fill("");
+    const testcasesResults: TestCaseResultsObjectType[] = Array(
+      this.input.length
+    );
+    const logs: string[] = Array(this.input.length).fill("");
     let testPassedStatus = true;
 
     const windowLog = console.log;
@@ -67,10 +74,18 @@ export default class CodeExecutionEngine implements CodeExecution {
       };
     }
 
+    const operationResults: OperationResultType[] = [];
+    for (let i = 0; i < this.input.length; i++) {
+      operationResults.push({
+        logs: logs[i],
+        testCaseResults: testcasesResults[i],
+        input: this.input[i],
+      });
+    }
+
     console.log = windowLog;
     return {
-      logs,
-      testcasesResults,
+      operationResults,
       status: testPassedStatus,
     };
   }

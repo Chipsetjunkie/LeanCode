@@ -2,18 +2,17 @@ import React, { forwardRef, useImperativeHandle, useRef, useState } from 'react'
 import CodeMirror from '@uiw/react-codemirror';
 import { javascript } from '@codemirror/lang-javascript';
 import { vscodeDark } from '@uiw/codemirror-theme-vscode';
-
-
-import ProblemDescription from '@/components/ProblemDescription';
-import CodeEditorSettings from '@/components/CodeEditorSettings';
-
-
 import Split from 'react-split'
 
+//Component
+import ProblemDescription from '@/components/ProblemDescription';
+import CodeEditorSettings from '@/components/CodeEditorSettings';
+import TestCaseConsole from '@/components/TestCaseConsole';
 
-function PreferenceHeader() {
 
-}
+//Data
+import Problem from '@/dataStore/problems/jumpGame';
+
 
 
 
@@ -51,9 +50,6 @@ const CodeEditor = forwardRef(function MyInput(props, ref) {
 
 
 
-function TestCases() {
-  return <div className='flex flex-1 grow border border-[#FF0]'> Lorem ipsum dolor sit amet consectetur adipisicing elit. Nobis sint nostrum ratione totam distinctio officia, repudiandae voluptates eligendi, provident quibusdam possimus, a numquam? Incidunt aperiam doloribus dolor quam exercitationem dignissimos! Lorem ipsum dolor sit amet consectetur adipisicing elit. Perspiciatis aliquam illum atque tenetur voluptate, asperiores ratione corporis ut corrupti? Quidem dolore optio deserunt alias nulla ea repellendus eos et obcaecati. Lorem ipsum dolor sit amet consectetur adipisicing elit. Exercitationem sapiente laboriosam temporibus expedita nesciunt, labore velit fugiat unde illum tempore impedit aliquid reprehenderit, sequi quibusdam veniam ipsam voluptatibus. Alias, quis!</div>
-}
 
 
 export default function Index() {
@@ -79,7 +75,7 @@ export default function Index() {
       >
 
         <div className='bg-[#282828]'>
-          <ProblemDescription />
+          <ProblemDescription problem={Problem} />
         </div>
         <div className='flex flex-col'>
           <CodeEditorSettings changeFont={ChangeFont} />
@@ -92,8 +88,8 @@ export default function Index() {
             <div className="w-full overflow-auto bg-[#282828]">
               <CodeEditor ref={editorRef} />
             </div>
-            <div className='border border-[#0F0] bg-white overflow-auto'>
-              <TestCases />
+            <div className='bg-[#282828] overflow-auto'>
+              <TestCaseConsole testCases={Problem.tests} results={null} />
             </div>
           </Split>
         </div>

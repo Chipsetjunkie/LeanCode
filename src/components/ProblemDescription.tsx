@@ -1,5 +1,6 @@
 import React from 'react'
-import jumpGame from '@/dataStore/problems/jumpGame'
+
+import { ProblemType } from '@/types/problemSchema';
 
 //icons
 import {
@@ -18,29 +19,40 @@ const DIFFICULTY_COLOR = {
 }
 
 
-interface ProblemDescriptionProps {
+interface ProblemUserActivtyProps {
     completed?: boolean
     liked?: boolean
     unliked?: boolean
     starred?: boolean
 }
 
+interface ProblemDescriptionProps {
+    userActivty?: ProblemUserActivtyProps
+    problem: ProblemType
+}
+
+
 export default function ProblemDescription(props: ProblemDescriptionProps) {
 
-    const { completed, liked, unliked, starred } = props;
+    const { problem, userActivty = {} } = props;
+    const { completed, liked, unliked, starred } = userActivty;
+
+    const jumpGame = problem.description
+    const position = problem.position
+
 
     return (
         <div className='text-white'>
-            <div className='bg-dark-layer-2 flex h-10 pt-3 items-start' >     
+            <div className='bg-dark-layer-2 flex h-10 pt-3 items-start' >
                 <p className='bg-[#282828] p-3 pt-1 rounded-t text-[12px]'> Description</p>
-                
+
             </div>
             <div className='p-4'>
                 {/* Problem title */}
                 <div>
                     <div className="flex space-x-4">
                         <div className="flex-1 mr-2 text-lg text-white font-medium">
-                            <p> {jumpGame.position}. {jumpGame.title}</p>
+                            <p> {position}. {jumpGame.title}</p>
                         </div>
                     </div>
                     <div className='flex mt-3'>

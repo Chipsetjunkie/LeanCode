@@ -5,9 +5,12 @@ type ExamplesType = {
   explanation: string;
 };
 
-export interface ProblemType {
-  tests: any[];
-  answers: any[];
+export type TestType = {
+  inputs: any;
+  answers: any;
+};
+
+type ProblemDescription = {
   id: string;
   difficulty: "medium" | "easy" | "hard";
   title: string;
@@ -16,5 +19,10 @@ export interface ProblemType {
   constraints: string;
   starterCode: string;
   starterFunctionName: string;
-  position: 3;
+}
+
+export interface ProblemType {
+  tests: TestType[];
+  description: ProblemDescription
+  position: number;
 }
