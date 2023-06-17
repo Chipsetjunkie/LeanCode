@@ -43,7 +43,7 @@ const jumpGame: ProblemType = {
     constraints: `<li class='constrain_list_item'><code>1 <= nums.length <= 10^4</code></li>
       <li class="constrain_list_item"><code>0 <= nums[i] <= 10^</code></li>`,
     starterCode: starterCodeJumpGameJS,
-    starterFunctionName: "function canJump(",
+    starterFunctionName: "canJump",
   },
   position: 3,
 };

@@ -10,7 +10,7 @@ type TestCaseResultsObjectType = {
 type OperationResultType = {
   logs: string;
   testCaseResults: TestCaseResultsObjectType;
-  input: any
+  input: any;
 };
 
 export interface CodeExecutionReturnType {
@@ -23,44 +23,45 @@ interface ErrorType {
   message: any;
 }
 
-interface CodeExecution {
+export interface CodeExecution {
   execute(codeSnippet: string): CodeExecutionReturnType | ErrorType;
 }
 
 export default class CodeExecutionEngine implements CodeExecution {
-  input: any;
-  output: any;
+  input: any[];
   functionName: string;
 
-  constructor(input: any, output: any, functionName: string) {
+  constructor(input: any, functionName: string) {
     this.input = input;
-    this.output = output;
     this.functionName = functionName;
   }
 
-  execute(codeSnippet: string) {
-    const testcasesResults: TestCaseResultsObjectType[] = Array(
-      this.input.length
-    );
-    const logs: string[] = Array(this.input.length).fill("");
+  execute(codeSnippet: string, isTest = false) {
+    const testcasesResults: TestCaseResultsObjectType[] = []
+    const logs: string[] = []
     let testPassedStatus = true;
 
+
     const windowLog = console.log;
-    console.log = function (...args: any) {
-      windowLog(...args);
+    console.log = function (...args) {
+      // windowLog(...args);
       logs.push(`${[...args]}`);
     };
 
+
     try {
-      for (let i = 0; i < this.input.length; i++) {
+      for (let i = 0; i < (isTest ? 2 : this.input.length); i++) {
+        
+        const input = this.input[i].inputs;
+        const answer = this.input[i].answers;
         const handlerFunction = new Function(
-          "input",
-          `function run() {  ${codeSnippet} return ${this.functionName}()}`
+          `input`,
+          `function run(){ ${codeSnippet} return ${this.functionName}()} return run()`
         );
-        const result = handlerFunction(this.input);
-        const status = result === this.output[i];
+        const result = handlerFunction(input);
+        const status = result === answer;
         testcasesResults.push({
-          expected: this.output[i],
+          expected: answer,
           got: result,
           status,
         });
@@ -75,9 +76,9 @@ export default class CodeExecutionEngine implements CodeExecution {
     }
 
     const operationResults: OperationResultType[] = [];
-    for (let i = 0; i < this.input.length; i++) {
+    for (let i = 0; i < (isTest ? 2 : this.input.length); i++) {
       operationResults.push({
-        logs: logs[i],
+        logs: logs[i]|| "",
         testCaseResults: testcasesResults[i],
         input: this.input[i],
       });
