@@ -2,7 +2,8 @@ type ExamplesType = {
   id: number;
   inputText: string;
   outputText: string;
-  explanation: string;
+  explanation?: string;
+  img?:string
 };
 
 export type TestType = {
@@ -10,6 +11,7 @@ export type TestType = {
   answers: any;
 };
 
+//TODO: use generic type
 type ProblemDescription = {
   id: string;
   difficulty: "medium" | "easy" | "hard";
@@ -19,6 +21,8 @@ type ProblemDescription = {
   constraints: string;
   starterCode: string;
   starterFunctionName: string;
+  inputProcessor?: any
+  outputProcessor?: any
 }
 
 export interface ProblemType {

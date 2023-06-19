@@ -1,5 +1,6 @@
 //TODO: move computation to worker thread
 //TODO: clean up logic
+import equal from "deep-equal";
 
 type TestCaseResultsObjectType = {
   expected: string;
@@ -37,14 +38,28 @@ export default class CodeExecutionEngine implements CodeExecution {
     this.functionName = functionName;
   }
 
+  parseInput(input: any, inputProcessor: any) {
+    if (!inputProcessor) return input;
+  }
+
+  createExecutionFunction(input: any[], codeSnippet: string) {
+    const Inputs = [];
+    for (let i in input) {
+      Inputs.push(`input${i + 1}`);
+    }
+
+    return new Function(
+      ...Inputs,
+      `function run(){ ${codeSnippet} return ${this.functionName}(${Inputs})} return run()`
+    );
+  }
+
   execute(codeSnippet: string, isTest = false) {
     const testcasesResults: TestCaseResultsObjectType[] = [];
     const logs: string[] = [];
     let testPassedStatus = true;
 
     const windowLog = console.log;
-    const windowError = console.error;
-    console.error = function(){}
     console.log = function (...args) {
       // windowLog(...args);
       logs.push(`${[...args]}`);
@@ -55,12 +70,9 @@ export default class CodeExecutionEngine implements CodeExecution {
       for (let i = 0; i < (isTest ? 2 : this.input.length); i++) {
         const input = this.input[i].inputs;
         const answer = this.input[i].answers;
-        const handlerFunction = new Function(
-          "input",
-          `function run(){ ${codeSnippet} return ${this.functionName}(input)} return run()`
-        );
-        const result = handlerFunction(input);
-        const status = result === answer;
+        const handlerFunction = this.createExecutionFunction(input, codeSnippet)
+        const result = handlerFunction(...input);
+        const status = equal(result, answer);
         testcasesResults.push({
           expected: answer,
           got: result,
@@ -79,7 +91,7 @@ export default class CodeExecutionEngine implements CodeExecution {
     console.log = windowLog;
     const endTime = performance.now() - startTime;
     const operationResults: OperationResultType[] = [];
-    
+
     for (let i = 0; i < (isTest ? 2 : this.input.length); i++) {
       operationResults.push({
         logs: logs[i] || "",

@@ -1,15 +1,17 @@
 import { ProblemType } from "@/types/problemSchema";
 
-const starterCodeJumpGameJS = `function canJump(nums) {
+const starterCodeJumpGameJS = `
+// Do not edit function name
+function canJump(nums) {
   // Write your code here
 };`;
 
 const jumpGame: ProblemType = {
   tests: [
-    { inputs: [2, 3, 1, 1, 4], answers: true },
-    { inputs: [3, 2, 1, 0, 4], answers: false },
-    { inputs: [2, 0, 0], answers: true },
-    { inputs: [2, 5, 0, 0], answers: true },
+    { inputs: [[2, 3, 1, 1, 4]], answers: true },
+    { inputs: [[3, 2, 1, 0, 4]], answers: false },
+    { inputs: [[2, 0, 0]], answers: true },
+    { inputs: [[2, 5, 0, 0]], answers: true },
   ],
   description: {
     id: "jump-game",
