@@ -52,6 +52,7 @@ export default function SignUpScreen(props: LoginScreenProps) {
         } catch (err: any) {
             toast.error(err.message, {
                 position: "top-center",
+                theme: "dark"
             });
         } finally {
             toast.dismiss("loadingtoast");

@@ -149,11 +149,14 @@ export default function ProblemDescription(props: ProblemDescriptionProps) {
     function clickHandler(type: clickHandlerInput) {
         if (user) {
             updateUserPreference(type);
-        } else
-            toast.error("You must be logged in", {
+        } else {
+            return toast.error("Please login to continue!", {
                 position: "top-center",
+                autoClose: 2000,
                 theme: "dark",
             });
+        }
+
     }
 
     async function updateInitialState() {

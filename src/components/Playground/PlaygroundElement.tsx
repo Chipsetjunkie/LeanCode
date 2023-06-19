@@ -45,17 +45,18 @@ export default function Playground({ Problem }: any) {
       loading: true,
     }));
 
-    if (isTest) {
-      const _results = codexRef.current.execute(codeSnippet, isTest);
+
+    const _results = codexRef.current.execute(codeSnippet, isTest);
 
 
-      setResults((prev) => ({
-        data: _results,
-        loading: false,
-        goToResults: true,
-        completed: _results?.status ? true : prev.completed
-      }));
-    }
+    setResults((prev) => ({
+      data: _results,
+      loading: false,
+      goToResults: true,
+      ...(isTest ? { completed: prev.completed } : { completed: _results?.status ? true : prev.completed })
+
+    }));
+
   }
 
   function ChangeFont() {

@@ -18,6 +18,7 @@ export interface CodeExecutionReturnType {
   operationResults: OperationResultType[];
   status: boolean;
   runTime: number;
+  submitted: boolean;
 }
 
 export interface ErrorType {
@@ -70,15 +71,21 @@ export default class CodeExecutionEngine implements CodeExecution {
       for (let i = 0; i < (isTest ? 2 : this.input.length); i++) {
         const input = this.input[i].inputs;
         const answer = this.input[i].answers;
-        const handlerFunction = this.createExecutionFunction(input, codeSnippet)
+        const handlerFunction = this.createExecutionFunction(
+          input,
+          codeSnippet
+        );
         const result = handlerFunction(...input);
-        const status = equal(result, answer);
+        const status = equal(result, answer, { strict: true });
         testcasesResults.push({
           expected: answer,
           got: result,
           status,
         });
-        if (!status) testPassedStatus = false;
+        if (!status) {
+          testPassedStatus = false;
+          if (!isTest) break;
+        }
       }
     } catch (e) {
       console.log = windowLog;
@@ -92,7 +99,7 @@ export default class CodeExecutionEngine implements CodeExecution {
     const endTime = performance.now() - startTime;
     const operationResults: OperationResultType[] = [];
 
-    for (let i = 0; i < (isTest ? 2 : this.input.length); i++) {
+    for (let i = 0; i < (isTest ? 2 : testcasesResults.length); i++) {
       operationResults.push({
         logs: logs[i] || "",
         testCaseResults: testcasesResults[i],
@@ -104,6 +111,7 @@ export default class CodeExecutionEngine implements CodeExecution {
       operationResults,
       status: testPassedStatus,
       runTime: endTime,
+      submitted: !isTest,
     };
   }
 }
