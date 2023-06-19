@@ -13,7 +13,7 @@ const validParentheses: ProblemType = {
     { inputs: ["{[]}"], answers: true },
   ],
   description: {
-    id: "valid-parenthesis",
+    id: "VALID_PARENTHESES",
     title: "Valid Parentheses",
     difficulty: "hard",
     problemStatement: `<p class='mt-3'>Given a string <code>s</code> containing just the characters <code>'('</code>, <code>')'</code>, <code>'{'</code>, <code>'}'</code>, <code>'['</code> and <code>']'</code>, determine if the input string is valid.</p> <p class='mt-3'>An input string is valid if:</p> <ul> <li class='mt-2'>Open brackets must be closed by the same type of brackets.</li> <li class='mt-3'>Open brackets must be closed in the correct order.</li>

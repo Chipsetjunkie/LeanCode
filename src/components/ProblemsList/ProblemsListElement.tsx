@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { getFirestore, collection } from "firebase/firestore";
 import { useCollection } from "react-firebase-hooks/firestore";
 import ProblemListSkeleton from "../Skeleton/ProblemListSkeleton";
-import { toast } from "react-toastify";
+import { useRouter } from "next/router";
 
 import { app } from "@/firebase/setup";
 import useHasMounted from "@/hooks/useHasMounted";
@@ -12,6 +12,7 @@ type DifficultType = "easy" | "medium" | "hard"
 
 export default function ProblemsListElement() {
   const hasMounted = useHasMounted();
+  const router = useRouter();
   const [value, loading, error] = useCollection(
     collection(getFirestore(app), "ProblemList")
   );
@@ -44,7 +45,7 @@ export default function ProblemsListElement() {
           <tbody>
             {value?.docs?.map((doc: any) => (
               <tr key={doc.id} className="bg-[#111317] border-b-[4px] border-[#0C0B10]">
-                <td className="text-center text-sm py-4">{doc.data().title}</td>
+                <td className="text-center text-sm py-4 cursor-pointer" onClick={()=> router.push(`/problem/${doc.id}`)}>{doc.data().title}</td>
                 <td className="text-center text-sm py-4">
                   <code>{doc.data().category}</code>
                 </td>
@@ -62,4 +63,3 @@ export default function ProblemsListElement() {
     );
   }
 }
-

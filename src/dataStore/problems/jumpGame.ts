@@ -14,7 +14,7 @@ const jumpGame: ProblemType = {
     { inputs: [[2, 5, 0, 0]], answers: true },
   ],
   description: {
-    id: "jump-game",
+    id: "JUMP_GAME",
     title: "Jump Game",
     difficulty: "medium",
     problemStatement: `<p class='mt-3'>

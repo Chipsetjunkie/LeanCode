@@ -26,7 +26,7 @@ class LinkedList {
 
 
 
-// it creates a linked list from an array
+// TODO: Convert this into string based function
 function createLinkedList(values: number[]): LinkedList {
   const head = new LinkedList(values[0]);
   let current = head;
@@ -38,7 +38,7 @@ function createLinkedList(values: number[]): LinkedList {
   return head;
 }
 
-// it returns an array of values from a linked list
+// TODO: Convert this into string based function
 function getListValues(head: LinkedList): number[] {
   const values = [];
   let current: LinkedList | null = head;
@@ -71,7 +71,7 @@ const reverseLinkedList: ProblemType = {
     {inputs:[[1]], answers: [1]},
   ],
   description: {
-    id: "reverse-linked-list",
+    id: "REVERSE_LINKED_LIST",
     title: "Reverse Linked List",
     difficulty: "easy",
     problemStatement: `<p class='mt-3'>Given the <code>head</code> of a singly linked list, reverse the list, and return <em>the reversed list</em>.</p>

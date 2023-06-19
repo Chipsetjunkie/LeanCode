@@ -12,7 +12,7 @@ function* getDataToBeWritten() {
     {
       id: "REVERSE_LINKED_LIST",
       title: "Reverse Linked List",
-      difficulty: "Hard",
+      difficulty: "hard",
       category: "Linked List",
     },
     {

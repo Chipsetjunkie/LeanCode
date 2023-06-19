@@ -32,7 +32,7 @@ export default function HeaderElement({ styleUpdate = "bg-black h-[60px]", back 
     return (
         <div className={`w-full flex-1  flex flex-col justify-center ${styleUpdate}`}>
             <div className="mx-4 flex justify-between items-center">
-                <div> {back ? <BiArrowBack onClick={() => router.replace("/")} className="text-white cursor-pointer" /> : <p>LeanCode</p>}</div>
+                <div> {back ? <BiArrowBack onClick={() => router.back()} className="text-white cursor-pointer" /> : <p>LeanCode</p>}</div>
                 <button
                     className="p-1 w-[80px] text-black font-bold bg-brand-orange rounded"
                     onClick={() => {

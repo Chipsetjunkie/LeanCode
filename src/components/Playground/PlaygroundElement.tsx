@@ -13,13 +13,12 @@ import TestCaseConsole from "./TestCaseConsole";
 import CodeEditor from "./CodeEditor";
 
 //Data
-import Problem from "@/dataStore/problems/reverseLinkedLists";
 import TestCaseConsoleFooter from "@/components/Playground/TestCaseConsoleFooter";
 import HeaderElement from "../Header/HeaderElement";
 
 
 
-export default function Playground() {
+export default function Playground({ Problem }: any) {
   const [results, setResults] = useState({
     loading: false,
     data: null,

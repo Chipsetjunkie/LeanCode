@@ -33,7 +33,7 @@ const search2DMatrix: ProblemType = {
     },
   ],
   description: {
-    id: "search-2d-matrix",
+    id: "SEARCH_A_2D_MATRIX",
     title: "Search a 2D Matrix",
     difficulty: "medium",
     problemStatement: `

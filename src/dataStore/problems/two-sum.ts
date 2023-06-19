@@ -20,7 +20,7 @@ const twoSum: ProblemType = {
     },
   ],
   description: {
-    id: "two-sum",
+    id: "TWO_SUM",
     difficulty: "easy",
     title: "Two Sum",
     problemStatement: `<p class='mt-3'>

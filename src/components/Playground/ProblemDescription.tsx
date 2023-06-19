@@ -198,6 +198,7 @@ export default function ProblemDescription(props: ProblemDescriptionProps) {
                 starred: false,
                 completed: false,
             });
+            setLoading(false)
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [user]);
