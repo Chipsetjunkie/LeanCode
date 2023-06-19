@@ -13,8 +13,9 @@ import TestCaseConsole from "./TestCaseConsole";
 import CodeEditor from "./CodeEditor";
 
 //Data
-import Problem from "@/dataStore/problems/validParenthesis";
+import Problem from "@/dataStore/problems/reverseLinkedLists";
 import TestCaseConsoleFooter from "@/components/Playground/TestCaseConsoleFooter";
+import HeaderElement from "../Header/HeaderElement";
 
 
 
@@ -64,14 +65,17 @@ export default function Playground() {
 
   return (
     <div>
+      <div>
+        <HeaderElement styleUpdate="h-[60px] bg-[#282828]" back={true} />
+      </div>
       <Split sizes={[30, 70]} minSize={[0, 300]} className="split h-[100vh]">
-        <div className="bg-[#282828]">
-          <ProblemDescription problem={Problem} completed={results.completed} />
+        <div className="bg-[#282828] overflow-auto">
+          <ProblemDescription problem={Problem} completed={true} />
         </div>
         <div className="flex flex-col">
           <CodeEditorSettings changeFont={ChangeFont} />
           <Split
-            className="h-[calc(100vh-30px)]"
+            className="h-[calc(100vh-100px)]"
             sizes={[60, 40]}
             minSize={60}
             direction="vertical"

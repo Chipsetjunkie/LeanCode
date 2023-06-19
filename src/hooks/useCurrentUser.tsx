@@ -8,9 +8,5 @@ import { signOut } from 'firebase/auth';
 export default function useCurrentUser() {
     const [user, loading, error] = useAuthState(auth)
 
-    useEffect(() => {
-        console.log(user)
-    }, [user])
-
     return { user, loading, error, signOut: () => signOut(auth) }
 }

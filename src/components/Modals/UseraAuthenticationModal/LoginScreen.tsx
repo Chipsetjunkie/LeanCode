@@ -1,26 +1,22 @@
-import React, { useState } from 'react'
-import { toast } from "react-toastify"
+import React, { useState } from "react";
+import { toast } from "react-toastify";
 
-import useSignInUser from '@/hooks/useSignIn'
+import useSignInUser from "@/hooks/useSignIn";
 
 interface LoginScreenProps {
-    changeMode: (x: boolean) => void
-    closeModal: () => void
+    changeMode: (x: boolean) => void;
+    closeModal: () => void;
 }
 
 export default function LoginScreen(props: LoginScreenProps) {
-
     const [loginDetails, setLoginDetails] = useState({
         email: "",
-        password: ""
-    })
+        password: "",
+    });
 
-    const { signInWithEmailAndPassword } = useSignInUser()
+    const { signInWithEmailAndPassword, error } = useSignInUser();
 
-
-    const handleSignIn = async (
-        e: React.FormEvent<HTMLFormElement>
-    ) => {
+    const handleSignIn = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         try {
             if (!loginDetails.email || !loginDetails.password)
@@ -28,11 +24,27 @@ export default function LoginScreen(props: LoginScreenProps) {
             const loggedInUser = await signInWithEmailAndPassword(
                 loginDetails.email,
                 loginDetails.password
-            );
-            console.log(loggedInUser)
-            props.closeModal()
-            if (!loggedInUser) return;
-
+            )
+            if (error) {
+                toast.error(error.message, {
+                    position: "top-center",
+                    autoClose: 3000,
+                    theme: "dark",
+                });
+            } else if (!loggedInUser) {
+                toast.error("Sign in Failed", {
+                    position: "top-center",
+                    autoClose: 3000,
+                    theme: "dark",
+                });
+            } else {
+                toast.success("logged In", {
+                    position: "top-center",
+                    autoClose: 3000,
+                    theme: "dark",
+                });
+                props.closeModal();
+            }
 
         } catch (err: any) {
             toast.error(err.message, {
@@ -43,7 +55,7 @@ export default function LoginScreen(props: LoginScreenProps) {
         }
     };
     return (
-        <div className="bg-[#001220] flex flex-col justify-center items-center p-4 rounded h-[400px] w-[300px]">
+        <div className="bg-[#001220] text-white flex flex-col justify-center items-center p-4 rounded h-[400px] w-[300px]">
             <div>
                 <p className="text-[#3DE6AF] text-[30px]"> Login </p>
             </div>
@@ -54,7 +66,9 @@ export default function LoginScreen(props: LoginScreenProps) {
                 <br />
                 <input
                     placeholder="Email"
-                    onChange={(e) => setLoginDetails(prev => ({ ...prev, email: e.target.value }))}
+                    onChange={(e) =>
+                        setLoginDetails((prev) => ({ ...prev, email: e.target.value }))
+                    }
                     className="border border-[#276087] text-sm placeholder-[#276087] bg-[#082336] p-2 rounded"
                     type="email"
                     id="email"
@@ -69,7 +83,9 @@ export default function LoginScreen(props: LoginScreenProps) {
                     placeholder="Password"
                     type="password"
                     id="password"
-                    onChange={(e) => setLoginDetails(prev => ({ ...prev, password: e.target.value }))}
+                    onChange={(e) =>
+                        setLoginDetails((prev) => ({ ...prev, password: e.target.value }))
+                    }
                     className=" text-sm  placeholder-[#276087] text-[#276087] border border-[#276087] bg-[#082336] p-2 rounded"
                     value={loginDetails.password}
                 />
@@ -79,9 +95,7 @@ export default function LoginScreen(props: LoginScreenProps) {
                         Not registered?
                         <span
                             className="font-bold cursor-pointer border-b  ml-1 border-[#3DE6AF]"
-                            onClick={() =>
-                                props.changeMode(true)
-                            }
+                            onClick={() => props.changeMode(true)}
                         >
                             Signup
                         </span>
@@ -95,5 +109,5 @@ export default function LoginScreen(props: LoginScreenProps) {
                 </button>
             </form>
         </div>
-    )
+    );
 }

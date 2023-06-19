@@ -12,26 +12,9 @@ type DifficultType = "easy" | "medium" | "hard"
 
 export default function ProblemsListElement() {
   const hasMounted = useHasMounted();
-  const value:any = []
-  const loading = false
-  // const [value, loading, error] = useCollection(
-  //   collection(getFirestore(app), "ProblemList")
-  // );
-
-  console.log(value, "valeu")
-
-  useEffect(() => {
-    // toast.info('🦄 Wow so easy!', {
-    //   position: "top-left",
-    //   autoClose: 5000,
-    //   hideProgressBar: false,
-    //   closeOnClick: true,
-    //   pauseOnHover: true,
-    //   draggable: true,
-    //   progress: undefined,
-    //   theme: "dark",
-    // });
-  }, [])
+  const [value, loading, error] = useCollection(
+    collection(getFirestore(app), "ProblemList")
+  );
 
 
   const difficulty = {
@@ -51,24 +34,28 @@ export default function ProblemsListElement() {
           <HeaderElement />
         </div>
         <table className="w-3/4 mt-[100px] bg-[#191B1F] ">
-          <tr>
-            <th className="py-4 text-sm">NAME</th>
-            <th className="py-4 text-sm">CATEGORY</th>
-            <th className="py-4 text-sm">DIFFICULTY</th>
-          </tr>
-          {value?.docs?.map((doc:any) => (
-            <tr key={doc.id} className="bg-[#111317] border-b-[4px] border-[#0C0B10]">
-              <td className="text-center text-sm py-4">{doc.data().title}</td>
-              <td className="text-center text-sm py-4">
-                <code>{doc.data().category}</code>
-              </td>
-              <td
-                className={`text-center text-sm py-4 ${difficulty[doc.data().difficulty as DifficultType]} capitalize`}
-              >
-                {doc.data().difficulty}
-              </td>
+          <thead>
+            <tr>
+              <th className="py-4 text-sm">NAME</th>
+              <th className="py-4 text-sm">CATEGORY</th>
+              <th className="py-4 text-sm">DIFFICULTY</th>
             </tr>
-          ))}
+          </thead>
+          <tbody>
+            {value?.docs?.map((doc: any) => (
+              <tr key={doc.id} className="bg-[#111317] border-b-[4px] border-[#0C0B10]">
+                <td className="text-center text-sm py-4">{doc.data().title}</td>
+                <td className="text-center text-sm py-4">
+                  <code>{doc.data().category}</code>
+                </td>
+                <td
+                  className={`text-center text-sm py-4 ${difficulty[doc.data().difficulty as DifficultType]} capitalize`}
+                >
+                  {doc.data().difficulty}
+                </td>
+              </tr>
+            ))}
+          </tbody>
         </table>
 
       </div>
