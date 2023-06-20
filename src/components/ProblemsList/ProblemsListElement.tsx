@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { getFirestore, collection } from "firebase/firestore";
+import { getFirestore, collection, query, orderBy } from "firebase/firestore";
 import { useCollection } from "react-firebase-hooks/firestore";
 import ProblemListSkeleton from "../Skeleton/ProblemListSkeleton";
 import { useRouter } from "next/router";
@@ -7,6 +7,7 @@ import { useRouter } from "next/router";
 import { app } from "@/firebase/setup";
 import useHasMounted from "@/hooks/useHasMounted";
 import HeaderElement from "../Header/HeaderElement";
+import { toast } from "react-toastify";
 
 type DifficultType = "easy" | "medium" | "hard"
 
@@ -14,7 +15,10 @@ export default function ProblemsListElement() {
   const hasMounted = useHasMounted();
   const router = useRouter();
   const [value, loading, error] = useCollection(
-    collection(getFirestore(app), "ProblemList")
+    query(
+      collection(getFirestore(app), "ProblemList"),
+      orderBy("position", "asc")
+    )
   );
 
 
@@ -25,6 +29,13 @@ export default function ProblemsListElement() {
   };
 
   if (!hasMounted) return null;
+  if (error) {
+    toast.error("Failed to get data", {
+      position: "top-center",
+      theme: "dark"
+    })
+    return null
+  }
   if (loading) {
     return <ProblemListSkeleton />
   }
@@ -45,7 +56,7 @@ export default function ProblemsListElement() {
           <tbody>
             {value?.docs?.map((doc: any) => (
               <tr key={doc.id} className="bg-[#111317] border-b-[4px] border-[#0C0B10]">
-                <td className="text-center text-sm py-4 cursor-pointer" onClick={()=> router.push(`/problem/${doc.id}`)}>{doc.data().title}</td>
+                <td className="text-center text-sm py-4 cursor-pointer" onClick={() => router.push(`/problem/${doc.id}`)}>{doc.data().title}</td>
                 <td className="text-center text-sm py-4">
                   <code>{doc.data().category}</code>
                 </td>

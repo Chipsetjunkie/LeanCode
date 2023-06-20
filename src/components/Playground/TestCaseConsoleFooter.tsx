@@ -14,13 +14,13 @@ export default function TestCaseConsoleFooter(props: TestCaseConsoleFooterProps)
     const { user } = useCurrentUser()
 
     function handleCodeExecution(isTesting: boolean) {
-        if (!user) {
-            return toast.error("Please login to contiue!", {
-                position: "top-center",
-                autoClose: 2000,
-                theme: "dark",
-            });
-        }
+        // if (!user) {
+        //     return toast.error("Please login to contiue!", {
+        //         position: "top-center",
+        //         autoClose: 2000,
+        //         theme: "dark",
+        //     });
+        // }
         !props.loading && props.runCode(isTesting)
     }
 

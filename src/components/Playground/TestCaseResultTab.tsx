@@ -14,9 +14,19 @@ export default function TestCaseResultTab({ results }: { results: ResultsType })
         return <div className=" bg-[#692C38] text-dark-pink p-3 mt-10 m-3 rounded">
             <p className="opacity-100 text-dark-pink">{results.message?.message}</p>
         </div>
+    } else if (results.submitted && results.status) {
+        return <div className="text-white p-4">
+            <div className="mt-4">
+
+                <div className="pb-8">
+                    <p className="text-olive text-xl">
+                        Congrats!!! You solved it 🎉
+                    </p>
+                </div>
+            </div></div>
     } else {
         const lastIndex = results?.operationResults?.length - 1
-        const testCaseIndex = results?.submitted ? lastIndex: active
+        const testCaseIndex = results?.submitted ? lastIndex : active
         return (
             <div className="text-white p-4">
                 <div className="mt-4">

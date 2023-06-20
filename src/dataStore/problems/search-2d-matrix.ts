@@ -78,7 +78,7 @@ const search2DMatrix: ProblemType = {
     starterCode: starterCodeSearch2DMatrixJS,
     starterFunctionName: "searchMatrix",
   },
-  position: 3,
+  position: 2,
 };
 
 export default search2DMatrix

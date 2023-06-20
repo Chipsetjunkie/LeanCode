@@ -65,7 +65,7 @@ const twoSum: ProblemType = {
 
     starterFunctionName: "twoSum",
   },
-  position: 4,
+  position: 3,
 };
 
 

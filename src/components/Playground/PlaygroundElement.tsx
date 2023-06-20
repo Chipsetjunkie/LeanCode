@@ -11,6 +11,7 @@ import ProblemDescription from "./ProblemDescription";
 import CodeEditorSettings from "./CodeEditorSettings";
 import TestCaseConsole from "./TestCaseConsole";
 import CodeEditor from "./CodeEditor";
+import ConfettiExplosion from 'react-confetti-explosion';
 
 //Data
 import TestCaseConsoleFooter from "@/components/Playground/TestCaseConsoleFooter";
@@ -25,6 +26,7 @@ export default function Playground({ Problem }: any) {
     goToResults: false,
     completed: false
   });
+  const [testPassed, setTestPassed] = useState(false)
 
   const editorRef = useRef<any>(null);
   const codexRef = useRef<any>(null);
@@ -48,6 +50,7 @@ export default function Playground({ Problem }: any) {
 
     const _results = codexRef.current.execute(codeSnippet, isTest);
 
+    console.log(_results, "results")
 
     setResults((prev) => ({
       data: _results,
@@ -56,6 +59,9 @@ export default function Playground({ Problem }: any) {
       ...(isTest ? { completed: prev.completed } : { completed: _results?.status ? true : prev.completed })
 
     }));
+    if (!isTest && _results.status) {
+      setTestPassed(true)
+    }
 
   }
 
@@ -67,6 +73,9 @@ export default function Playground({ Problem }: any) {
     <div>
       <div>
         <HeaderElement styleUpdate="h-[60px] bg-[#282828]" back={true} />
+      </div>
+      <div className="w-full flex justify-center items-center">
+        {testPassed && <ConfettiExplosion />}
       </div>
       <Split sizes={[30, 70]} minSize={[0, 300]} className="split h-[100vh]">
         <div className="bg-[#282828] overflow-auto">

@@ -46,7 +46,7 @@ const validParentheses: ProblemType = {
     starterCode: starterCodeValidParenthesesJS,
     starterFunctionName: "validParentheses",
   },
-  position: 5,
+  position: 4,
 };
 
 export default validParentheses
