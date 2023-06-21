@@ -50,7 +50,6 @@ export const handleLogin = async (userData: {
   const result = await response.json();
   const users = localStorage.getItem("users");
   if (!users) return null;
-  console.log(users, result);
   const currentUser = JSON.parse(users)[result.token] as UserType;
   if (JSON.parse(users)[result.token]) {
     sessionStorage.setItem("current-user", result.token);

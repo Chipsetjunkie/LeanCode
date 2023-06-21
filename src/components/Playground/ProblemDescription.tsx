@@ -174,14 +174,12 @@ export default function ProblemDescription(props: ProblemDescriptionProps) {
 
     useEffect(() => {
         if (user && completed && !hasCompletedRef.current) {
-            console.log("marking cmpleted")
             markProblemCompleted();
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [completed]);
 
     useEffect(() => {
-        console.log(user, "useri")
         if (user) {
             setLoading(true)
             updateInitialState();

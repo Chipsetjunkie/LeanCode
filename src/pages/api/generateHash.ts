@@ -14,7 +14,6 @@ export default function handler(
     const secret = process.env.NEXT_SECRET;
 
     const { email, password } = req.body;
-    console.log(email + password);
     const hash = crypto
       .createHmac("sha256", secret)
       .update(email + password)

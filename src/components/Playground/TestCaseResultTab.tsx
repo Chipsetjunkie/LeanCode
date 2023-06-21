@@ -2,7 +2,6 @@ import React, { useState } from "react";
 
 //types
 import { CodeExecutionReturnType, ErrorType } from "@/utils/CodeExEngine";
-import { error } from "console";
 
 type ResultsType = CodeExecutionReturnType | ErrorType;
 
@@ -27,7 +26,6 @@ export default function TestCaseResultTab({ results }: { results: ResultsType })
     } else {
         const lastIndex = results?.operationResults?.length - 1
         const testCaseIndex = results?.submitted ? lastIndex : active
-        console.log(results?.operationResults, "op results")
         return (
             <div className="text-white p-4">
                 <div className="mt-4">

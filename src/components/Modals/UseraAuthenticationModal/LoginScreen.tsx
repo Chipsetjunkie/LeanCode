@@ -25,7 +25,6 @@ export default function LoginScreen(props: LoginScreenProps) {
             return alert("Please fill all fields");
 
         const user = await handleLogin(loginDetails)
-        console.log(user, "user!!")
         if (!user) {
             toast.error("User not found!", {
                 position: "top-center",
