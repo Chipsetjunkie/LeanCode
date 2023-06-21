@@ -1,9 +1,9 @@
 import React, { useState } from 'react'
 import { toast } from "react-toastify"
-import useSignUpUser from '@/hooks/useSignUpUser'
+import { handleUserSignup } from '@/helpers/api'
+import { useSetRecoilState } from "recoil"
+import { userStore } from '@/global/store'
 
-//api
-import { updateUser } from '@/helpers/api'
 
 interface LoginScreenProps {
     changeMode: (x: boolean) => void
@@ -11,8 +11,7 @@ interface LoginScreenProps {
 }
 
 export default function SignUpScreen(props: LoginScreenProps) {
-
-    const { createUserWithEmailAndPassword } = useSignUpUser()
+    const setCurrentUser = useSetRecoilState(userStore)
     const [loginDetails, setLoginDetails] = useState({
         email: "",
         username: "",
@@ -20,43 +19,19 @@ export default function SignUpScreen(props: LoginScreenProps) {
     })
 
 
-    const handleSignUp = async (e: React.FormEvent<HTMLFormElement>) => {
+    const signUpUser = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        if (!loginDetails.email || !loginDetails.password) return alert("fill all the details");
-        try {
-            toast.loading("Creating your account", {
-                position: "top-center",
-                toastId: "loadingtoast",
-            });
-            const newUser = await createUserWithEmailAndPassword(
-                loginDetails.email,
-                loginDetails.password
-            );
+        if (!loginDetails.email || !loginDetails.password || !loginDetails.username) return alert("fill all the details");
 
-
-            if (!newUser) return;
-            const userData = {
-                uid: newUser.user.uid,
-                email: newUser.user.email,
-                displayName: loginDetails.username,
-                createdAt: Date.now(),
-                updatedAt: Date.now(),
-                likedProblems: [],
-                dislikedProblems: [],
-                solvedProblems: [],
-                starredProblems: [],
-            };
-
-            await updateUser(newUser.user.uid, userData)
-
-        } catch (err: any) {
-            toast.error(err.message, {
-                position: "top-center",
-                theme: "dark"
-            });
-        } finally {
-            toast.dismiss("loadingtoast");
-        }
+        const user = await handleUserSignup(loginDetails)
+        setCurrentUser({
+            currentUser: user
+        })
+        toast.success("User signed up successfully", {
+            position: "top-center",
+            theme: "dark"
+        })
+        props.closeModal()
     };
 
     return (
@@ -64,7 +39,7 @@ export default function SignUpScreen(props: LoginScreenProps) {
             <div>
                 <p className="text-[#3DE6AF] text-[30px]"> Signup </p>
             </div>
-            <form onSubmit={handleSignUp}>
+            <form onSubmit={signUpUser}>
                 <label htmlFor="email" className="invisible">
                     Email
                 </label>

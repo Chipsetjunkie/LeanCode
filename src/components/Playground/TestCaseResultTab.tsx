@@ -27,6 +27,7 @@ export default function TestCaseResultTab({ results }: { results: ResultsType })
     } else {
         const lastIndex = results?.operationResults?.length - 1
         const testCaseIndex = results?.submitted ? lastIndex : active
+        console.log(results?.operationResults, "op results")
         return (
             <div className="text-white p-4">
                 <div className="mt-4">
@@ -57,15 +58,19 @@ export default function TestCaseResultTab({ results }: { results: ResultsType })
                     <p className="text-sm mt-4 text-white opacity-50"> Input:</p>
                     <div className="w-full cursor-text rounded-lg border px-3 py-[10px] bg-dark-fill-3 border-transparent text-white mt-2">
                         <p className="opacity-50 text-sm mb-2">nums = </p>
-                        <p>{JSON.stringify(results?.operationResults[testCaseIndex]?.input?.inputs[0] || "")}</p>
+                        {results?.operationResults[testCaseIndex]?.input?.inputs?.map((item: any, index: number) => (
+                            <p key={`${testCaseIndex}-inputs-${index}`}>{JSON.stringify(item)}</p>
+                        ))}
                     </div>
                 </div>
 
-                {!!results?.operationResults[testCaseIndex]?.logs?.length && (
+                {!!results?.operationResults[testCaseIndex]?.testCaseResults.logs?.length && (
                     <div className="font-light">
                         <p className="text-sm  mt-4 text-white opacity-50"> stdout</p>
                         <div className="w-full cursor-text rounded-lg border px-3 py-[10px] bg-dark-fill-3 border-transparent text-white mt-2">
-                            <p>{`${results?.operationResults[testCaseIndex]?.logs}`}</p>
+                            {results?.operationResults[testCaseIndex]?.testCaseResults.logs?.map((item, index) => (
+                                <p key={`${testCaseIndex}-logs-${index}`}>{item}</p>
+                            ))}
                         </div>
                     </div>
                 )}

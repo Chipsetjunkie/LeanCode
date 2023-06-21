@@ -1,7 +1,9 @@
 import React, { useState } from "react";
 import { toast } from "react-toastify";
 
-import useSignInUser from "@/hooks/useSignIn";
+import { handleLogin } from "@/helpers/api";
+import { useSetRecoilState } from "recoil";
+import { userStore } from "@/global/store";
 
 interface LoginScreenProps {
     changeMode: (x: boolean) => void;
@@ -9,57 +11,42 @@ interface LoginScreenProps {
 }
 
 export default function LoginScreen(props: LoginScreenProps) {
+    const setCurrentUser = useSetRecoilState(userStore)
     const [loginDetails, setLoginDetails] = useState({
         email: "",
         password: "",
     });
 
-    const { signInWithEmailAndPassword, error } = useSignInUser();
 
-    const handleSignIn = async (e: React.FormEvent<HTMLFormElement>) => {
+    const signInUser = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        try {
-            if (!loginDetails.email || !loginDetails.password)
-                return alert("Please fill all fields");
-            const loggedInUser = await signInWithEmailAndPassword(
-                loginDetails.email,
-                loginDetails.password
-            )
-            if (error) {
-                toast.error(error.message, {
-                    position: "top-center",
-                    autoClose: 3000,
-                    theme: "dark",
-                });
-            } else if (!loggedInUser) {
-                toast.error("Sign in Failed", {
-                    position: "top-center",
-                    autoClose: 3000,
-                    theme: "dark",
-                });
-            } else {
-                toast.success("logged In", {
-                    position: "top-center",
-                    autoClose: 3000,
-                    theme: "dark",
-                });
-                props.closeModal();
-            }
 
-        } catch (err: any) {
-            toast.error(err.message, {
+        if (!loginDetails.email || !loginDetails.password)
+            return alert("Please fill all fields");
+
+        const user = await handleLogin(loginDetails)
+        console.log(user, "user!!")
+        if (!user) {
+            toast.error("User not found!", {
                 position: "top-center",
-                autoClose: 3000,
                 theme: "dark",
-            });
+            })
+        } else {
+            toast.success("Login success", {
+                position: "top-center",
+                theme: "dark",
+            })
+            setCurrentUser({ currentUser: user })
+            props.closeModal()
         }
+
     };
     return (
         <div className="bg-[#001220] text-white flex flex-col justify-center items-center p-4 rounded h-[400px] w-[300px]">
             <div>
                 <p className="text-[#3DE6AF] text-[30px]"> Login </p>
             </div>
-            <form onSubmit={handleSignIn}>
+            <form onSubmit={signInUser}>
                 <label htmlFor="email" className="invisible">
                     Email
                 </label>

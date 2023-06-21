@@ -6,10 +6,10 @@ type TestCaseResultsObjectType = {
   expected: string;
   got: string;
   status: boolean;
+  logs:string[]
 };
 
 type OperationResultType = {
-  logs: string;
   testCaseResults: TestCaseResultsObjectType;
   input: any;
 };
@@ -57,7 +57,7 @@ export default class CodeExecutionEngine implements CodeExecution {
 
   execute(codeSnippet: string, isTest = false) {
     const testcasesResults: TestCaseResultsObjectType[] = [];
-    const logs: string[] = [];
+    let logs: string[] = [];
     let testPassedStatus = true;
 
     const windowLog = console.log;
@@ -81,11 +81,13 @@ export default class CodeExecutionEngine implements CodeExecution {
           expected: answer,
           got: result,
           status,
+          logs
         });
         if (!status) {
           testPassedStatus = false;
           if (!isTest) break;
         }
+        logs = []
       }
     } catch (e) {
       console.log = windowLog;
@@ -101,7 +103,6 @@ export default class CodeExecutionEngine implements CodeExecution {
 
     for (let i = 0; i < (isTest ? 2 : testcasesResults.length); i++) {
       operationResults.push({
-        logs: logs[i] || "",
         testCaseResults: testcasesResults[i],
         input: this.input[i],
       });

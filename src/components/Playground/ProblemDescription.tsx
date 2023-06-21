@@ -11,6 +11,9 @@ import { AiFillLike, AiFillDislike, AiFillStar } from "react-icons/ai";
 import { BsCheck2Circle } from "react-icons/bs";
 import { TiStarOutline } from "react-icons/ti";
 import useCurrentUser from "@/hooks/useCurrentUser";
+import { UserType, userStore } from "@/global/store";
+import { useSetRecoilState } from "recoil";
+import { handleUserUpdate } from "@/helpers/api";
 
 const DIFFICULTY_COLOR = {
     easy: "bg-olive text-olive",
@@ -51,6 +54,7 @@ function getUpdatedState(state: any, type: clickHandlerInput) {
 export default function ProblemDescription(props: ProblemDescriptionProps) {
     const { user } = useCurrentUser();
     const hasCompletedRef = useRef(false);
+    const setCurrentUser = useSetRecoilState(userStore)
 
     const { problem, completed } = props;
     const [loading, setLoading] = useState(true);
@@ -67,83 +71,70 @@ export default function ProblemDescription(props: ProblemDescriptionProps) {
     const position = problem.position;
 
     async function updateUserPreference(type: clickHandlerInput) {
-        try {
-            const updatedState = getUpdatedState({ ...userPreferences }, type);
-            await runTransaction(db, async (transaction) => {
-                const userRef = doc(db, "users", user!.uid);
-                const userDoc = await transaction.get(userRef);
-                if (userDoc.exists()) {
-                    if (type !== "starred") {
-                        const likedProblems = !updatedState.liked
-                            ? userDoc
-                                .data()
-                                .likedProblems.filter(
-                                    (id: string) => id !== problem.description.id
-                                )
-                            : [...userDoc.data().likedProblems, problem.description.id];
+        const updatedState = getUpdatedState({ ...userPreferences }, type);
+        const userData = user as UserType
+        let likedProblems = userData.likedProblems
+        let dislikedProblems = userData.dislikedProblems
+        let starredProblems = userData.starredProblems
+        if (type !== "starred") {
+            likedProblems = !updatedState.liked
+                ? likedProblems.filter(
+                    (id: string) => id !== problem.description.id
+                )
+                : [...likedProblems, problem.description.id];
 
-                        const dislikedProblems = !updatedState.disliked
-                            ? userDoc
-                                .data()
-                                .dislikedProblems.filter(
-                                    (id: string) => id !== problem.description.id
-                                )
-                            : [...userDoc.data().dislikedProblems, problem.description.id];
+            dislikedProblems = !updatedState.disliked
+                ? dislikedProblems.filter(
+                    (id: string) => id !== problem.description.id
+                )
+                : [...dislikedProblems, problem.description.id];
 
-                        transaction.update(userRef, {
-                            likedProblems,
-                            dislikedProblems,
-                        });
-                    } else {
-                        const starredProblems = !updatedState.starred
-                            ? userDoc
-                                .data()
-                                .starredProblems.filter(
-                                    (id: string) => id !== problem.description.id
-                                )
-                            : [...userDoc.data().starredProblems, problem.description.id];
+        } else {
+            starredProblems = !updatedState.starred
+                ? starredProblems.filter(
+                    (id: string) => id !== problem.description.id
+                )
+                : [...starredProblems, problem.description.id];
 
-                        transaction.update(userRef, {
-                            starredProblems,
-                        });
-                    }
 
-                    setUserPreference({ ...updatedState });
-                } else {
-                    toast.error("User data unavailable!", {
-                        position: "top-center",
-                        theme: "dark",
-                    });
-                }
-            });
-        } catch (error: any) {
-            toast.error(error?.message || "Failed to update action", {
-                position: "top-center",
-                theme: "dark",
-            });
         }
+
+        const updatedCurrentUser = {
+            ...user as UserType,
+            likedProblems,
+            starredProblems,
+            dislikedProblems
+        }
+        handleUserUpdate(updatedCurrentUser)
+        setCurrentUser({
+            currentUser: updatedCurrentUser
+        })
+
+        setUserPreference({ ...updatedState });
+
+
     }
 
     async function markProblemCompleted() {
-        await runTransaction(db, async (transaction) => {
-            const userRef = doc(db, "users", user!.uid);
-            const userDoc = await transaction.get(userRef);
-            if (userDoc.exists()) {
-                const solvedProblems = userDoc.data().solvedProblems;
-                if (!solvedProblems.includes(problem.description.id)) {
-                    transaction.update(userRef, {
-                        solvedProblems: [...solvedProblems, problem.description.id],
-                    });
-                }
+        const solvedProblems = (user as UserType).solvedProblems;
+        if (!solvedProblems.includes(problem.description.id)) {
+            const updatedSolvedProblems = [...solvedProblems, problem.description.id]
+            const updatedUserDetails = {
+                ...user as UserType,
+                solvedProblems: updatedSolvedProblems
             }
-        });
+            handleUserUpdate(updatedUserDetails)
+            setCurrentUser({
+                currentUser: updatedUserDetails
+            })
 
-        // TO Prevent unnecessary call to api
-        hasCompletedRef.current = true;
-        setUserPreference(prev => ({
-            ...prev,
-            completed: true
-        }))
+            hasCompletedRef.current = true;
+            setUserPreference(prev => ({
+                ...prev,
+                completed: true
+            }))
+        }
+
     }
 
     function clickHandler(type: clickHandlerInput) {
@@ -160,37 +151,37 @@ export default function ProblemDescription(props: ProblemDescriptionProps) {
     }
 
     async function updateInitialState() {
-        const docRef = doc(db, "users", user!.uid);
-        const docSnap = await getDoc(docRef);
-        if (docSnap.exists()) {
-            const userData = docSnap.data();
-            const liked = userData.likedProblems.includes(problem.description.id);
-            const disliked = userData.dislikedProblems.includes(
-                problem.description.id
-            );
-            const starred = userData.starredProblems.includes(problem.description.id);
-            const completed = userData.solvedProblems.includes(
-                problem.description.id
-            );
 
-            setUserPreference({
-                liked,
-                disliked,
-                starred,
-                completed,
-            });
-            setLoading(false);
-        }
+        const userData = user as UserType
+        const liked = userData.likedProblems.includes(problem.description.id);
+        const disliked = userData.dislikedProblems.includes(
+            problem.description.id
+        );
+        const starred = userData.starredProblems.includes(problem.description.id);
+        const completed = userData.solvedProblems.includes(
+            problem.description.id
+        );
+
+        setUserPreference({
+            liked,
+            disliked,
+            starred,
+            completed,
+        });
+        setLoading(false);
+
     }
 
     useEffect(() => {
         if (user && completed && !hasCompletedRef.current) {
+            console.log("marking cmpleted")
             markProblemCompleted();
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [completed]);
 
     useEffect(() => {
+        console.log(user, "useri")
         if (user) {
             setLoading(true)
             updateInitialState();
