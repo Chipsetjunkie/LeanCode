@@ -64,7 +64,7 @@
 ## About The Project
 This is a side project focused on creating a code sandbox that allows code execution on the client-side. The main goal was to explore the idea of building a minimalistic sandbox similar to platforms like LeetCode. 
 
-The project explores both firebase and localstorage as db sources. The main branch uses localstorage as db and authencation is maintained across sessions. 
+The project explores both firebase and localstorage as db sources. The main branch uses localstorage as db and authentication is maintained across sessions. 
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -85,7 +85,7 @@ The project explores both firebase and localstorage as db sources. The main bran
 <!-- GETTING STARTED -->
 ## Getting Started
 
-This is a standard Nextjs project. Do install the necessary pacakges and get hacking. Do note that, the authentication flow in the main branch branch is simulated one, rather than making a direct api call. If you intend to have a backend service, do checkout out the firebase branch. The basic implementatio is already in place with basic sandbox functionality. Intially, started with firebase but later decided to disable it due to billing paranoa 😅
+This is a standard Nextjs project. Do install the necessary packages and get hacking. Do note that, the authentication flow in the main branch branch is a simulated one, no api is being called that directly handles this flow. If you intend to have a backend service, do checkout out the firebase branch. The basic implementation is already in place with limited sandbox functionality. Initially, started with firebase but later decided to disable it due to billing paranoia 😅
 
 ### Installation
 * To get started do install the pacakges using the following command
@@ -100,14 +100,14 @@ This is a standard Nextjs project. Do install the necessary pacakges and get hac
   ```
 
 <br/>  
-NOTE: You will have to setup envs by yourself, do refere env type declaration(env.d.ts) for naming conventions.
+NOTE: You will have to setup envs by yourself, do refer env type declaration(env.d.ts) for naming conventions.
 
 
 <!-- ROADMAP -->
 ## Roadmap
 
 - [ ] Move code execution to workers
-- [ ] Truncate output
+- [ ] Truncate execution results output
 - [ ] Handle non-primitive inputs
 - [ ] Handle timeout and rogue loops
 
