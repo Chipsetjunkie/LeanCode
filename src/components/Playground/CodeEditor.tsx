@@ -8,7 +8,7 @@ import React, {
 import CodeMirror from "@uiw/react-codemirror";
 import { javascript } from "@codemirror/lang-javascript";
 import { vscodeDark } from "@uiw/codemirror-theme-vscode";
-import { getCurrentUserFromStorage } from "@/utils/DataHelper";
+import useCurrentUser from "@/hooks/useCurrentUser";
 
 
 
@@ -17,6 +17,7 @@ const CodeEditor = forwardRef(function MyInput(
   ref
 ) {
   const [fontSize, setFontSize] = useState<string>("16px");
+  const { user: currentUser } = useCurrentUser()
   const [userCodeSnippet, setUserCodeSnippet] = useState<string>(props.starterCode);
   const childRef = useRef(null);
 
@@ -36,14 +37,13 @@ const CodeEditor = forwardRef(function MyInput(
   );
 
   useEffect(() => {
-    const currentUser = getCurrentUserFromStorage()
     if (currentUser) {
       setUserCodeSnippet(currentUser.solution[props.problemId] || props.starterCode)
     } else {
       setUserCodeSnippet(props.starterCode)
     }
 
-  }, [props.problemId, props.starterCode])
+  }, [props.problemId, props.starterCode, currentUser])
 
   const onChange = React.useCallback((value: any, viewUpdate: any) => {
     setUserCodeSnippet(value);
