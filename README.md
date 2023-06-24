@@ -28,11 +28,10 @@
     A client side code execution sandbox mimicking some of leetcode's functionality.
     <br />
     <br />
-    <a href="https://lean-code-rlosrqha4-chipsetjunkie.vercel.app/">View Demo</a>
   </p>
 </div>
 
-
+![Demo](/demo/demo.gif)
 
 <!-- TABLE OF CONTENTS -->
 <details>
