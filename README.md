@@ -31,7 +31,7 @@
   </p>
 </div>
 
-![Demo](/demo/demo.gif)
+![Demo](/demo/output.gif)
 
 <!-- TABLE OF CONTENTS -->
 <details>
